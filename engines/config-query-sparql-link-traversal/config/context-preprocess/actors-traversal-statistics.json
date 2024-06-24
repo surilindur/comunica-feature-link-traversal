@@ -1,0 +1,62 @@
+{
+    "@context": [
+      "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/runner/^3.0.0/components/context.jsonld",
+  
+      "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-context-preprocess-convert-shortcuts/^3.0.0/components/context.jsonld",
+      "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-context-preprocess-set-defaults/^3.0.0/components/context.jsonld",
+      "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-context-preprocess-source-to-destination/^3.0.0/components/context.jsonld",
+      "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-context-preprocess-query-source-identify/^3.0.0/components/context.jsonld",
+      "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-context-preprocess-query-source-skolemize/^3.0.0/components/context.jsonld",
+      "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-context-preprocess-statistic-link-discovery/^3.0.0/components/context.jsonld",
+      "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-context-preprocess-statistic-dereference-order/^3.0.0/components/context.jsonld"
+
+    ],
+    "@id": "urn:comunica:default:Runner",
+    "@type": "Runner",
+    "actors": [
+      {
+        "@id": "urn:comunica:default:context-preprocess/actors#convert-shortcuts",
+        "@type": "ActorContextPreprocessConvertShortcuts"
+      },
+      {
+        "@id": "urn:comunica:default:context-preprocess/actors#set-defaults",
+        "@type": "ActorContextPreprocessSetDefaults",
+        "beforeActors": [
+            { "@id": "urn:comunica:default:context-preprocess/actors#statistic-dereference-order" },
+            { "@id": "urn:comunica:default:context-preprocess/actors#statistic-link-discovery" }
+          ]    
+      },
+      {
+        "@id": "urn:comunica:default:context-preprocess/actors#source-to-destination",
+        "@type": "ActorContextPreprocessSourceToDestination"
+      },
+      {
+        "@id": "urn:comunica:default:context-preprocess/actors#query-source-identify",
+        "@type": "ActorContextPreprocessQuerySourceIdentify",
+        "mediatorQuerySourceIdentify": { "@id": "urn:comunica:default:query-source-identify/mediators#main" },
+        "mediatorContextPreprocess": { "@id": "urn:comunica:default:context-preprocess/mediators#main" },
+        "beforeActors": { "@id": "urn:comunica:default:context-preprocess/actors#query-source-skolemize" }
+      },
+      {
+        "@id": "urn:comunica:default:context-preprocess/actors#query-source-skolemize",
+        "@type": "ActorContextPreprocessQuerySourceSkolemize"
+      },      
+      {
+        "@id": "urn:comunica:default:context-preprocess/actors#statistic-link-discovery",
+        "@type": "ActorContextPreprocessStatisticLinkDiscovery",
+        "beforeActors": [
+          { "@id": "urn:comunica:default:context-preprocess/actors#query-source-identify" }
+        ]    
+
+      },
+      {
+        "@id": "urn:comunica:default:context-preprocess/actors#statistic-dereference-order",
+        "@type": "ActorContextPreprocessStatisticDereferenceOrder",
+        "beforeActors": [
+          { "@id": "urn:comunica:default:context-preprocess/actors#query-source-identify" }
+        ]   
+
+      }
+    ]
+  }
+  

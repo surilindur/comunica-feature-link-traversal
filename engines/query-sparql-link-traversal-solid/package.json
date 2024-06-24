@@ -51,6 +51,8 @@
   },
   "dependencies": {
     "@comunica/actor-context-preprocess-set-defaults-link-traversal": "^0.4.1",
+    "@comunica/actor-context-preprocess-statistic-dereference-order": "^3.1.0",
+    "@comunica/actor-context-preprocess-statistic-link-discovery": "^3.1.0",
     "@comunica/actor-extract-links-all": "^0.4.1",
     "@comunica/actor-extract-links-content-policies": "^0.4.1",
     "@comunica/actor-extract-links-headers": "^0.4.1",
