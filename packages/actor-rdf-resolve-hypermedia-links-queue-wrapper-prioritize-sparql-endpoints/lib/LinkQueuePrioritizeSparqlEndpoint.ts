@@ -5,15 +5,19 @@ import { LinkQueueWrapper } from '@comunica/bus-rdf-resolve-hypermedia-links-que
  * A link queue that prioritizes Sparql endpoint URIs
  */
 export class LinkQueuePrioritizeSparqlEndpoint extends LinkQueueWrapper {
-  private limit: number;
+  private sparqlEndpointPredicate: string;
 
-  public constructor(linkQueue: ILinkQueue, sparqlEndpointUri: string) {
+  public constructor(linkQueue: ILinkQueue, sparqlEndpointPredicate: string) {
     super(linkQueue);
+    this.sparqlEndpointPredicate = sparqlEndpointPredicate;
   }
-
+  
   public override push(link: ILink, parent: ILink): boolean {
-    console.log(link);
-    // Todo implement priority setting
+    if (link.metadata && link.metadata!['producedByActor']){
+       if (link.metadata!['producedByActor']['matchingPredicate'] === this.sparqlEndpointPredicate){
+            link.metadata['priority'] = 1;
+       }
+    }
     return super.push(link, parent);
   }
 }

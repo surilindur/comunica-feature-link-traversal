@@ -12,7 +12,7 @@
         "@type": "ActorRdfResolveHypermediaLinksQueueWrapperPrioritizeSparqlEndpoints",
         "beforeActors": { "@id": "urn:comunica:default:rdf-resolve-hypermedia-links-queue/actors#priority" },
         "mediatorRdfResolveHypermediaLinksQueue": { "@id": "urn:comunica:default:rdf-resolve-hypermedia-links-queue/mediators#main" },
-        "sparqlEndpointUri": "test"
+        "sparqlEndpointPredicate": "http://rdfs.org/ns/void#sparqlEndpoint"
       }
     ]
   }

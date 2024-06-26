@@ -10,7 +10,7 @@ export class ActorRdfResolveHypermediaLinksQueueWrapperPrioritizeSparqlEndpoints
   private readonly mediatorRdfResolveHypermediaLinksQueue: Mediator<
   Actor<IActionRdfResolveHypermediaLinksQueue, IActorTest, IActorRdfResolveHypermediaLinksQueueOutput>,
   IActionRdfResolveHypermediaLinksQueue, IActorTest, IActorRdfResolveHypermediaLinksQueueOutput>;
-  private readonly sparqlEndpointUri: string
+  private readonly sparqlEndpointPredicate: string
 
   public constructor(args: IActorRdfResolveHypermediaLinksQueueWrapperPrioritizeSparqlEndpointsArgs) {
     super(args);
@@ -24,7 +24,6 @@ export class ActorRdfResolveHypermediaLinksQueueWrapperPrioritizeSparqlEndpoints
   }
 
   public async run(action: IActionRdfResolveHypermediaLinksQueue): Promise<IActorRdfResolveHypermediaLinksQueueOutput> {
-    console.log("RUUUUUUUUN")
     const context = action.context.set(KEY_CONTEXT_WRAPPED, true);
     const { linkQueue } = await this.mediatorRdfResolveHypermediaLinksQueue.mediate({ ...action, context });
 
@@ -32,7 +31,7 @@ export class ActorRdfResolveHypermediaLinksQueueWrapperPrioritizeSparqlEndpoints
       throw new Error("Tried to wrap a non-priority queue with a link prioritisation wrapper.")
     }
   
-    return { linkQueue: new LinkQueuePrioritizeSparqlEndpoint(linkQueue, this.sparqlEndpointUri) }
+    return { linkQueue: new LinkQueuePrioritizeSparqlEndpoint(linkQueue, this.sparqlEndpointPredicate) }
   }
 }
 
@@ -45,5 +44,5 @@ extends IActorArgs<IActionRdfResolveHypermediaLinksQueue, IActorTest, IActorRdfR
   mediatorRdfResolveHypermediaLinksQueue: Mediator<
   Actor<IActionRdfResolveHypermediaLinksQueue, IActorTest, IActorRdfResolveHypermediaLinksQueueOutput>,
   IActionRdfResolveHypermediaLinksQueue, IActorTest, IActorRdfResolveHypermediaLinksQueueOutput>;
-  sparqlEndpointUri: string
+  sparqlEndpointPredicate: string
 }
