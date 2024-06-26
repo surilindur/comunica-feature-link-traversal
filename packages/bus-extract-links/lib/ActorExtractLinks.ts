@@ -1,6 +1,8 @@
 import type { ILink } from '@comunica/bus-rdf-resolve-hypermedia-links';
+import { KeysDeactivateLinkExtractor } from '@comunica/context-entries-link-traversal';
 import type { IActorArgs, IActorOutput, IActorTest, Mediate, IAction } from '@comunica/core';
 import { Actor } from '@comunica/core';
+import { EVERY_REACHABILITY_CRITERIA, IActorExtractDescription } from '@comunica/types-link-traversal';
 import type * as RDF from '@rdfjs/types';
 
 /**
@@ -45,6 +47,46 @@ export abstract class ActorExtractLinks extends Actor<IActionExtractLinks, IActo
       metadata.on('end', () => {
         resolve(links);
       });
+    });
+  }
+
+  public async test(action: IActionExtractLinks): Promise<IActorTest> {
+    return true;
+    return new Promise((resolve, reject) => {
+      const deactivationMap: Map<string, IActorExtractDescription> | undefined =
+        action.context.get(KeysDeactivateLinkExtractor.deactivate);
+      if (deactivationMap === undefined) {
+        resolve(true);
+        return;
+      }
+
+      let deactivationInformation: IActorExtractDescription | undefined;
+      for (const name of [ this.name, EVERY_REACHABILITY_CRITERIA ]) {
+        const currentDeactivationInformation = deactivationMap.get(name);
+        if (currentDeactivationInformation !== undefined) {
+          deactivationInformation = currentDeactivationInformation;
+          break;
+        }
+      }
+
+      if (deactivationInformation === undefined) {
+        resolve(true);
+        return;
+      }
+
+      if (deactivationInformation.urls.has(action.url)) {
+        reject(new Error('the extractor has been deactivated'));
+        return;
+      }
+
+      for (const regex of deactivationInformation.urlPatterns) {
+        if (regex.test(action.url)) {
+          reject(new Error('the extractor has been deactivated'));
+          return;
+        }
+      }
+
+      resolve(true);
     });
   }
 }

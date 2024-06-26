@@ -26,10 +26,6 @@ export class ActorExtractLinksTree extends ActorExtractLinks {
     super(args);
   }
 
-  public async test(_action: IActionExtractLinks): Promise<IActorTest> {
-    return true;
-  }
-
   public async run(action: IActionExtractLinks): Promise<IActorExtractLinksOutput> {
     return new Promise((resolve, reject) => {
       const strictModeFlag: boolean | undefined =
