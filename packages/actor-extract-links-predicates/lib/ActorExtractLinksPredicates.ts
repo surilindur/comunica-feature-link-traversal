@@ -13,7 +13,6 @@ export class ActorExtractLinksPredicates extends ActorExtractLinks {
   private readonly predicates: RegExp[];
   private readonly stringPredicates: string[];
   private filters: Map<string, FilterFunction> = new Map();
-  private linkDeactivationMap: Map<string, IActorExtractDescription> = new Map();
 
   public constructor(args: IActorExtractLinksTraversePredicatesArgs) {
     super(args);

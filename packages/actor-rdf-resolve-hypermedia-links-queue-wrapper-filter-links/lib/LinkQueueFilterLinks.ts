@@ -23,7 +23,6 @@ export class LinkQueueFilterLinks extends LinkQueueWrapper {
   public override push(link: ILink, parent: ILink): boolean {
     for (const filter of this.filterMap.values()) {
       if (filter(link)) {
-        console.log("reject push: ", link.url);
         return false;
       }
     }
