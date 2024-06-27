@@ -6,6 +6,7 @@
   "import": [
     "ccqslt:config/config-solid-base.json",
     "ccqslt:config/extract-links/actors/predicates-common.json",
+    "ccqslt:config/extract-links/actors/predicates-sparql-endpoint.json",
     "ccqslt:config/extract-links/actors/predicates-ldp.json",
     "ccqslt:config/extract-links/actors/links-describedby.json",
     "ccqslt:config/extract-links/actors/predicates-solidstorage.json",
