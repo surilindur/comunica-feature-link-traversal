@@ -10,7 +10,7 @@
     {
       "@id": "urn:comunica:default:rdf-resolve-hypermedia-links-queue/actors#wrapper-filter-links",
       "@type": "ActorRdfResolveHypermediaLinksQueueWrapperFilterLinks",
-      "beforeActors": { "@id": "urn:comunica:default:rdf-resolve-hypermedia-links-queue/actors#fifo" },
+      "beforeActors": { "@id": "urn:comunica:default:rdf-resolve-hypermedia-links-queue/actors#priority" },
       "calculateSize": false,
       "mediatorRdfResolveHypermediaLinksQueue": { "@id": "urn:comunica:default:rdf-resolve-hypermedia-links-queue/mediators#main" }
     }
