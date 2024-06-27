@@ -24,8 +24,6 @@ export class ActorExtractLinksPredicates extends ActorExtractLinks {
 
   public async run(action: IActionExtractLinks): Promise<IActorExtractLinksOutput> {
     let filters: undefined | Map<string, FilterFunction> = action.context.get(KeysFilter.filters);
-    // We add filters to the context, if it doesn't exist or the query has changed
-    // We also reset the cashing of shape index handled
     if (filters === undefined) {
       filters = new Map();
       action.context = action.context.set(KeysFilter.filters, filters);
@@ -37,7 +35,7 @@ export class ActorExtractLinksPredicates extends ActorExtractLinks {
         if (!this.checkSubject || this.subjectMatches(quad.subject.value, action.url)) {
           for (const regex of this.predicates) {
             if (regex.test(quad.predicate.value)) {
-              //this.generateFilter(quad.predicate.value, quad.subject.value);
+              this.generateFilter(quad.predicate.value, quad.subject.value,quad.object.value);
                 links.push({
                   url: quad.object.value,
                   metadata: {
@@ -65,19 +63,16 @@ export class ActorExtractLinksPredicates extends ActorExtractLinks {
     return subject === url;
   }
 
-  private generateFilter(matchingPredicate: string, pod:string): boolean {
+  private generateFilter(matchingPredicate: string, pod:string, endpointUrl:string): boolean {
     const sparlEndpointInSolidPredicate = "http://rdfs.org/ns/void#sparqlEndpoint";
     if (matchingPredicate === sparlEndpointInSolidPredicate) {
-      this.filters.set(`${performance.now}_ignore_pod${pod}`, (link: ILink): boolean => {        
+      this.filters.set(`${performance.now()}_ignore_pod_${pod}`, (link: ILink): boolean => {    
+        if(link.url===endpointUrl){
+          return false;
+        }    
         return link.url.includes(pod);
       });
-
-      this.linkDeactivationMap.set(EVERY_REACHABILITY_CRITERIA, {
-        actorParam: new Map(),
-        urlPatterns: new Set([ new RegExp(`${pod}.*`)]),
-        urls: new Set(),
-      });
-
+      
       return true;
     }
     return false;
