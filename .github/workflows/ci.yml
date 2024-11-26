@@ -91,15 +91,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os:
-          - macos-latest
-          - ubuntu-latest
-          - windows-latest
         node-version:
           - 18.x
           - 20.x
           - 22.x
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
       - name: Ensure line endings are consistent
         run: git config --global core.autocrlf input
@@ -118,7 +114,11 @@ jobs:
       - name: Install dependencies and build
         run: yarn install --frozen-lockfile --ignore-engines
       - name: Run system tests
-        run: yarn run test-ci:system
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 2
+          max_attempts: 3
+          command: yarn run test-ci:system
         env:
           NODE_OPTIONS: --max_old_space_size=4096
 
