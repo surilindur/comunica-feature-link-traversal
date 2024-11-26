@@ -95,7 +95,9 @@ jobs:
           - 18.x
           - 20.x
           - 22.x
-    runs-on: ubuntu-latest
+        os:
+          - ubuntu-latest
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Ensure line endings are consistent
         run: git config --global core.autocrlf input
@@ -127,10 +129,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version:
-          - 18.x
-          - 20.x
-          - 22.x
+        browser:
+          - Chrome
+          - Firefox
+          # TODO: uncomment after the Webkit stuff has been sorted out in Karma
+          # - Webkit
     runs-on: ubuntu-latest
     steps:
       - name: Ensure line endings are consistent
@@ -148,13 +151,20 @@ jobs:
             **/node_modules
           key: ${{ runner.os }}-modules-${{ hashFiles('yarn.lock') }}
       - name: Install dependencies and build
-        run: yarn install --frozen-lockfile --ignore-engines
+        run: yarn install --frozen-lockfile
+      - name: Install ${{ matrix.browser }} via Playwright
+        if: startsWith(matrix.browser, 'Webkit')
+        # The @L will convert 'Webkit' into lowercase 'webkit' which is the name Playwright expects.
+        run: yarn playwright install --with-deps ${BROWSER_NAME@L}
+        env:
+          BROWSER_NAME: ${{ matrix.browser }}
       - name: Run browser tests
         uses: nick-fields/retry@v3
         with:
-          timeout_minutes: 3
+          timeout_minutes: 2
           max_attempts: 3
-          command: yarn run test-browser
+          # The tests will run on 'WebkitHeadless', 'FirefoxHeadless' and 'ChromeHeadless'
+          command: yarn run test:browser --browsers ${{ matrix.browser }}Headless
 
   coveralls:
     name: Coverage check
