@@ -5,9 +5,11 @@ import type {
   IActorRdfResolveHypermediaLinksQueueArgs,
   MediatorRdfResolveHypermediaLinksQueue,
 } from '@comunica/bus-rdf-resolve-hypermedia-links-queue';
+import { KeysQueryOperation } from '@comunica/context-entries';
 import { KeysRdfResolveHypermediaLinks } from '@comunica/context-entries-link-traversal';
 import type { IActorTest, TestResult } from '@comunica/core';
 import { ActionContextKey, failTest, passTestVoid } from '@comunica/core';
+import type { LinkFilterType } from '@comunica/types-link-traversal';
 import { LinkQueueWrapperFilter } from './LinkQueueWrapperFilter';
 
 /**
@@ -32,17 +34,22 @@ export class ActorRdfResolveHypermediaLinksQueueWrapperFilter extends ActorRdfRe
     if (!action.context.has(KeysRdfResolveHypermediaLinks.linkFilters)) {
       return failTest('Unable to wrap link queue with missing filter list');
     }
+    if (!action.context.has(KeysQueryOperation.operation)) {
+      return failTest('Unable to wrap link queue for filtering without query operation defined');
+    }
     return passTestVoid();
   }
 
   public async run(action: IActionRdfResolveHypermediaLinksQueue): Promise<IActorRdfResolveHypermediaLinksQueueOutput> {
     const context = action.context.set(ActorRdfResolveHypermediaLinksQueueWrapperFilter.keyWrapped, true);
     const linkFilters = action.context.getSafe(KeysRdfResolveHypermediaLinks.linkFilters);
+    const operation = action.context.getSafe(KeysQueryOperation.operation);
+    const operationFilters = (): LinkFilterType[] | undefined => linkFilters.get(operation);
     const { linkQueue } = await this.mediatorRdfResolveHypermediaLinksQueue.mediate({ ...action, context });
     return {
       linkQueue: new LinkQueueWrapperFilter(
         linkQueue,
-        linkFilters,
+        operationFilters,
         (message: string): void => {
           this.logWarn(action.context, message);
         },

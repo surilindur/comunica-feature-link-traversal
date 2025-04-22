@@ -1,7 +1,7 @@
 {
-  "name": "@comunica/actor-rdf-metadata-extract-link-filter-void",
+  "name": "@comunica/actor-rdf-metadata-extract-link-filter-bloom",
   "version": "0.6.0",
-  "description": "An actor to extract link filters based on VoID descriptions",
+  "description": "Comunica metadata extract actor for creating link filters from RDF-serialized Bloom filters",
   "lsd:module": true,
   "license": "MIT",
   "funding": {
@@ -12,7 +12,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/comunica/comunica-feature-link-traversal.git",
-    "directory": "packages/actor-rdf-metadata-extract-link-filter-void"
+    "directory": "packages/actor-rdf-metadata-extract-link-filter-bloom"
   },
   "bugs": {
     "url": "https://github.com/comunica/comunica-feature-link-traversal/issues"
@@ -20,7 +20,7 @@
   "keywords": [
     "comunica",
     "actor",
-    "rdf-metadata-link-filter-void"
+    "rdf-metadata-link-filter-bloom"
   ],
   "sideEffects": false,
   "main": "lib/index.js",
@@ -46,6 +46,8 @@
     "@comunica/context-entries-link-traversal": "^0.6.0",
     "@comunica/core": "^4.1.0",
     "@comunica/types": "^4.1.0",
-    "@rdfjs/types": "*"
+    "@rdfjs/types": "*",
+    "@types/bloem": "^0.2.0",
+    "bloem": "^0.2.0"
   }
 }

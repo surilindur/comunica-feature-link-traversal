@@ -15,7 +15,7 @@ export class CliArgsHandlerLinkFilters implements ICliArgsHandler {
 
   public async handleArgs(args: Record<string, any>, context: Record<string, any>): Promise<void> {
     if (args.voidLinkFilters) {
-      context[KeysRdfResolveHypermediaLinks.linkFilters.name] = [];
+      context[KeysRdfResolveHypermediaLinks.linkFilters.name] = new Map();
     }
   }
 }

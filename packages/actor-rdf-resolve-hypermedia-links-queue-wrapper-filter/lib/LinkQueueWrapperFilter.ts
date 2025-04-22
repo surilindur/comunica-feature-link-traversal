@@ -6,10 +6,14 @@ import type { LinkFilterType } from '@comunica/types-link-traversal';
  * A link queue wrapper that filters away links.
  */
 export class LinkQueueWrapperFilter extends LinkQueueWrapper {
-  private readonly filters: LinkFilterType[];
+  private readonly filters: () => LinkFilterType[] | undefined;
   private readonly logWarn: (message: string) => void;
 
-  public constructor(linkQueue: ILinkQueue, linkFilters: LinkFilterType[], logWarn: (message: string) => void) {
+  public constructor(
+    linkQueue: ILinkQueue,
+    linkFilters: () => LinkFilterType[] | undefined,
+    logWarn: (message: string) => void,
+  ) {
     super(linkQueue);
     this.filters = linkFilters;
     this.logWarn = logWarn;
@@ -17,12 +21,15 @@ export class LinkQueueWrapperFilter extends LinkQueueWrapper {
 
   public override pop(): ILink | undefined {
     let link = super.pop();
-    while (link) {
-      if (this.filters.some(filter => !filter(link!))) {
-        this.logWarn(`Skipping link due to filtering: ${link.url}`);
-        link = super.pop();
-      } else {
-        break;
+    const filters = this.filters();
+    if (filters) {
+      while (link) {
+        if (filters.some(filter => !filter(link!))) {
+          this.logWarn(`Skipping link due to filtering: ${link.url}`);
+          link = super.pop();
+        } else {
+          break;
+        }
       }
     }
     return link;

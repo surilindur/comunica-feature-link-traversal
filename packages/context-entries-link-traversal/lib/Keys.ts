@@ -1,5 +1,6 @@
 import { ActionContextKey } from '@comunica/core';
 import type { AnnotateSourcesType, LinkFilterType } from '@comunica/types-link-traversal';
+import type { Algebra } from 'sparqlalgebrajs';
 
 /**
  * When adding entries to this file, also add a shortcut for them in the contextKeyShortcuts TSDoc comment in
@@ -17,7 +18,7 @@ export const KeysRdfResolveHypermediaLinks = {
   /**
    * Context entry containing the link filters applied on link queues.
    */
-  linkFilters: new ActionContextKey<LinkFilterType[]>(
+  linkFilters: new ActionContextKey<Map<Algebra.Operation, LinkFilterType[]>>(
     '@comunica/bus-rdf-resolve-hypermedia-links:linkFilters',
   ),
 };
